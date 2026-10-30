@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sistem Tarayıcı</title>
+<style>
+:root{--bg:#0b1a12;--fg:#7dffb0;--warn:#ff5d5d;--yellow:#ffd23f;--surface:#0f2418;color-scheme:dark}
+@media (prefers-color-scheme:light){:root{--bg:#0b1a12;--fg:#7dffb0;--surface:#0f2418}}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--fg);font-family:"Courier New",ui-monospace,monospace;display:flex;align-items:center;justify-content:center;padding:env(safe-area-inset-top,0px) 20px env(safe-area-inset-bottom,0px)}
+main{width:100%;max-width:460px;text-align:left}
+h1{font-size:1.3rem;margin:0 0 14px}
+.bar{height:14px;background:var(--surface);border:1px solid var(--fg);border-radius:8px;overflow:hidden;margin:14px 0}
+.fill{height:100%;width:0;background:var(--fg);transition:width .4s linear}
+#log{min-height:130px;font-size:.9rem;line-height:1.6;white-space:pre-wrap}
+.warn{color:var(--warn)}
+#reveal{display:none;text-align:center}
+#reveal.show{display:block;animation:pop .5s ease-out}
+#reveal h2{font-size:3rem;margin:0;color:var(--yellow)}
+#reveal p{font-size:1.1rem;color:#fff}
+.emoji{font-size:4rem}
+@keyframes pop{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}
+@media (prefers-reduced-motion:reduce){#reveal.show{animation:none}}
+</style>
+</head>
+<body>
+<main>
+  <div id="scan">
+    <h1>⚠ Telefon güvenlik taraması</h1>
+    <div class="bar"><div class="fill" id="fill"></div></div>
+    <div id="log"></div>
+  </div>
+  <div id="reveal">
+    <p>Eğer beni öpersen bunu yapmam.</p>
+  </div>
+</main>
+<script>
+var steps=[
+ ["Dosyalar taranıyor...",false],
+ ["Galeri okunuyor...",false],
+ ["UYARI: 47 adet komik meme bulundu",true],
+ ["UYARI: Aşırı derecede boş zaman tespit edildi",true],
+ ["KRİTİK: Telefonun gülmeye başlamak üzere",true],
+ ["Telefon dondurulmaya hazırlanıyor...",true]
+];
+var log=document.getElementById("log"),fill=document.getElementById("fill"),i=0;
+function next(){
+  if(i>=steps.length){
+    fill.style.width="100%";
+    setTimeout(function(){
+      document.getElementById("scan").style.display="none";
+      document.getElementById("reveal").className="show";
+      try{if(navigator.vibrate)navigator.vibrate([200,100,200]);}catch(e){}
+    },900);
+    return;
+  }
+  var d=document.createElement("div");
+  d.textContent="> "+steps[i][0];
+  if(steps[i][1])d.className="warn";
+  log.appendChild(d);
+  i++;
+  fill.style.width=Math.round(i/steps.length*90)+"%";
+  setTimeout(next,1100);
+}
+setTimeout(next,600);
+</script>
+</body>
+</html>
